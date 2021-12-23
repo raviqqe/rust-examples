@@ -1,9 +1,16 @@
-use std::process::exit;
-use tokio::io::{stdout, AsyncWriteExt};
+use std::str;
+use tokio::{fs::File, io::AsyncReadExt};
 
 #[tokio::main]
 async fn main() {
-    stdin().read("Hello, world!".as_bytes()).await.unwrap();
+    let mut buffer = vec![0; 6];
 
-    exit(0);
+    File::open("./README.md")
+        .await
+        .unwrap()
+        .read(&mut buffer)
+        .await
+        .unwrap();
+
+    println!("{}", str::from_utf8(&buffer).unwrap());
 }
